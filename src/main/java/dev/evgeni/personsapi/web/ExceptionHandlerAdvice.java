@@ -11,7 +11,7 @@ import dev.evgeni.personsapi.error.NotFoundObjectException;
 import lombok.Data;
 
 @RestControllerAdvice
-public class ExeptionHandlerAdvice {
+public class ExceptionHandlerAdvice {
 
     @ExceptionHandler(InvalidObjectException.class)
     public ResponseEntity<GenericExeptionBody> handleInvalidObjectException(
