@@ -12,6 +12,8 @@ import jakarta.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidEgn {
     String message() default "EGN should have exactly 10 digits";
-    Class <?> [] groups() default {};
-    Class <? extends Payload> [] payload() default {};  
+
+    Class<?>[] groups() default {};
+
+    Class<? extends Payload>[] payload() default {};
 }

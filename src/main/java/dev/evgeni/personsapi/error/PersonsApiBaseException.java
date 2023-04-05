@@ -13,5 +13,5 @@ public class PersonsApiBaseException extends RuntimeException {
     public UUID getErrorId() {
         return errorId;
     }
-    
+
 }

@@ -22,10 +22,7 @@ public class ObjectValidator {
 
         Map<String, String> violationsMap = new HashMap<>();
         for (ConstraintViolation<Object> violation : validationFailures) {
-            violationsMap.put(
-                violation.getPropertyPath().toString(), 
-                violation.getMessage()
-            );
+            violationsMap.put(violation.getPropertyPath().toString(), violation.getMessage());
         }
 
         return violationsMap;

@@ -18,5 +18,5 @@ public class PersonCreateRequest {
 
     @ValidEgn(message = "Persons EGN should have exactly 10 chars")
     private String egnNumber;
-    
+
 }

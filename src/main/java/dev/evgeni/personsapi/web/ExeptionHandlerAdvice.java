@@ -13,37 +13,32 @@ import dev.evgeni.personsapi.error.NotFoundObjectException;
 public class ExeptionHandlerAdvice {
 
     @ExceptionHandler(InvalidObjectException.class)
-    public ResponseEntity<GenericExeptionBody> handleInvalidObjectException(InvalidObjectException ex) {
+    public ResponseEntity<GenericExeptionBody> handleInvalidObjectException(
+            InvalidObjectException ex) {
 
-        GenericExeptionBody exceptionBody = new GenericExeptionBody(
-            ex.getErrorId(),
-            ex.getMessage(), 
-            ex.getErrors(), 
-            null
-        );
+        GenericExeptionBody exceptionBody =
+                new GenericExeptionBody(ex.getErrorId(), ex.getMessage(), ex.getErrors(), null);
         return ResponseEntity.badRequest().body(exceptionBody);
     }
 
 
     @ExceptionHandler(NotFoundObjectException.class)
-    public ResponseEntity<GenericExeptionBody> handleObjectNotFoundException(NotFoundObjectException ex) {
+    public ResponseEntity<GenericExeptionBody> handleObjectNotFoundException(
+            NotFoundObjectException ex) {
 
-        GenericExeptionBody exceptionBody = new GenericExeptionBody(
-            ex.getErrorId(),
-            ex.getMessage() + ": " + ex.getId(),
-            null, 
-            ex.getObjectClazz()
-        );
+        GenericExeptionBody exceptionBody = new GenericExeptionBody(ex.getErrorId(),
+                ex.getMessage() + ": " + ex.getId(), null, ex.getObjectClazz());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionBody);
     }
 
     private static class GenericExeptionBody {
         private final UUID id;
         private final String message;
-        private final Map<String,String> errors;
+        private final Map<String, String> errors;
         private final String clazz;
 
-        public GenericExeptionBody(UUID id, String message, Map<String,String> errors, String clazz) {
+        public GenericExeptionBody(UUID id, String message, Map<String, String> errors,
+                String clazz) {
             this.id = id;
             this.message = message;
             this.errors = errors;
@@ -67,5 +62,5 @@ public class ExeptionHandlerAdvice {
         }
 
     }
-    
+
 }

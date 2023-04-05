@@ -12,5 +12,5 @@ public class SetPersonPhotosRequest {
 
     @NotNull
     private Set<UUID> personPhotoIds;
-    
+
 }

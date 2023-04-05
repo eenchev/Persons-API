@@ -10,5 +10,5 @@ import lombok.Data;
 public class PersonPhotosResponse {
 
     private Set<UUID> personPhotoIds;
-    
+
 }

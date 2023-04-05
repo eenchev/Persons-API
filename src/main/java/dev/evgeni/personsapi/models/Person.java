@@ -36,10 +36,8 @@ public class Person {
     private Address address;
 
     @ManyToMany
-    @JoinTable(
-        name = "person_photo", 
-        joinColumns = @JoinColumn(name = "person_id"), 
-        inverseJoinColumns = @JoinColumn(name = "photo_id"))
+    @JoinTable(name = "person_photo", joinColumns = @JoinColumn(name = "person_id"),
+            inverseJoinColumns = @JoinColumn(name = "photo_id"))
     @JsonIgnore
     private Set<Photo> photos;
 

@@ -48,9 +48,7 @@ public class PersonController {
     @GetMapping("/{personId}")
     public Person getPersonById(@PathVariable String personId) {
         return repo.findById(UUID.fromString(personId)).orElseThrow(() -> {
-            throw new NotFoundObjectException(
-                "Person Not Found", Person.class.getName(), personId
-            );
+            throw new NotFoundObjectException("Person Not Found", Person.class.getName(), personId);
         });
     }
 
@@ -67,14 +65,9 @@ public class PersonController {
             throw new InvalidObjectException("Invalid Person Create", validationErrors);
         }
 
-        Person mappedPerson = Person
-                        .builder()
-                        .name(personDto.getName())
-                        .age(personDto.getAge())
-                        .address(personDto.getAddress())
-                        .egnNumber(personDto.getEgnNumber())
-                        .build();
-        
+        Person mappedPerson = Person.builder().name(personDto.getName()).age(personDto.getAge())
+                .address(personDto.getAddress()).egnNumber(personDto.getEgnNumber()).build();
+
         Person savedPerson = repo.save(mappedPerson);
 
         return ResponseEntity.status(201).body(savedPerson);
@@ -85,14 +78,13 @@ public class PersonController {
 
         Person person = repo.findById(UUID.fromString(personId)).get();
 
-        //TODO(eie): move to Utils class
         Set<UUID> allPersonPhotoIds = new HashSet<>();
         for (Photo photo : person.getPhotos()) {
             allPersonPhotoIds.add(photo.getId());
         }
 
-        PersonPhotosResponse response = new PersonPhotosResponse();
-        response.setPersonPhotoIds(allPersonPhotoIds);
+        PersonPhotosResponse response =
+                PersonPhotosResponse.builder().personPhotoIds(allPersonPhotoIds).build();
 
         return response;
     }
@@ -104,11 +96,9 @@ public class PersonController {
 
         Map<String, String> validationErrors = validator.validate(request);
 
-        if(validationErrors.size() != 0) {
-            throw new InvalidObjectException(
-                "Invalid Person Photos Upsert Request", 
-                validationErrors
-            );
+        if (validationErrors.size() != 0) {
+            throw new InvalidObjectException("Invalid Person Photos Upsert Request",
+                    validationErrors);
         }
 
         List<Photo> allPersonPhotos =
@@ -122,11 +112,9 @@ public class PersonController {
             allPersonPhotoIds.add(photo.getId());
         }
 
-        PersonPhotosResponse response = PersonPhotosResponse
-                                    .builder()
-                                    .personPhotoIds(allPersonPhotoIds)
-                                    .build();
-                                    
+        PersonPhotosResponse response =
+                PersonPhotosResponse.builder().personPhotoIds(allPersonPhotoIds).build();
+
         return response;
     }
 

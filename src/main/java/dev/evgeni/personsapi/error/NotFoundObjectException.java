@@ -20,5 +20,5 @@ public class NotFoundObjectException extends PersonsApiBaseException {
     }
 
 
-    
+
 }

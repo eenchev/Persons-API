@@ -14,5 +14,5 @@ public class InvalidObjectException extends PersonsApiBaseException {
     public Map<String, String> getErrors() {
         return errors;
     }
-    
+
 }
