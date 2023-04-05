@@ -7,5 +7,5 @@ import dev.evgeni.personsapi.models.Photo;
 
 @Repository
 public interface PhotoRepository extends CrudRepository<Photo, UUID> {
-    
+
 }

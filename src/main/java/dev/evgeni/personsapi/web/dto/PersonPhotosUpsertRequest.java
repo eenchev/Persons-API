@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SetPersonPhotosRequest {
+public class PersonPhotosUpsertRequest {
 
     @NotNull
     private Set<UUID> personPhotoIds;

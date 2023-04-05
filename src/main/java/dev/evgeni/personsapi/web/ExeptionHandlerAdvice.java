@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import dev.evgeni.personsapi.error.InvalidObjectException;
 import dev.evgeni.personsapi.error.NotFoundObjectException;
+import lombok.Data;
 
 @RestControllerAdvice
 public class ExeptionHandlerAdvice {
@@ -31,6 +32,7 @@ public class ExeptionHandlerAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionBody);
     }
 
+    @Data
     private static class GenericExeptionBody {
         private final UUID id;
         private final String message;
@@ -43,22 +45,6 @@ public class ExeptionHandlerAdvice {
             this.message = message;
             this.errors = errors;
             this.clazz = clazz;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public Map<String, String> getErrors() {
-            return errors;
-        }
-
-        public String getClazz() {
-            return clazz;
-        }
-
-        public UUID getUuid() {
-            return id;
         }
 
     }

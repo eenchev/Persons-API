@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class PersonPhotosResponse {
+public class PersonPhotosGetResponse {
 
     private Set<UUID> personPhotoIds;
 
