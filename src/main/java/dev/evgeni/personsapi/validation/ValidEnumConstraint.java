@@ -5,7 +5,7 @@ import java.util.List;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class ValidEnumConstraint implements ConstraintValidator<ValidEnum ,String> {
+public class ValidEnumConstraint implements ConstraintValidator<ValidEnum, String> {
     List<String> valueList = null;
 
     @Override
@@ -14,14 +14,15 @@ public class ValidEnumConstraint implements ConstraintValidator<ValidEnum ,Strin
     }
 
     @Override
-    public void initialize(ValidEnumÍ constraintAnnotation) {
+    public void initialize(ValidEnum constraintAnnotation) {
         valueList = new ArrayList<String>();
         Class<? extends Enum<?>> enumClass = constraintAnnotation.enumClazz();
 
         @SuppressWarnings("rawtypes")
         Enum[] enumValArr = enumClass.getEnumConstants();
 
-        for (@SuppressWarnings("rawtypes") Enum enumVal : enumValArr) {
+        for (@SuppressWarnings("rawtypes")
+        Enum enumVal : enumValArr) {
             valueList.add(enumVal.toString().toUpperCase());
         }
     }
