@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonCreateRequest {
+public class PersonUpdateRequest {
 
     private String name;
     @Range(min = 0, max = 200, message = "i like ages from 0 to 200")
@@ -28,5 +28,4 @@ public class PersonCreateRequest {
 
     @ValidEnum(enumClazz = Gender.class)
     private String gender;
-
 }

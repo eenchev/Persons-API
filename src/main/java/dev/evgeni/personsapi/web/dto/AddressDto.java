@@ -1,20 +1,16 @@
 package dev.evgeni.personsapi.web.dto;
 
-import java.util.Set;
-import java.util.UUID;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class PersonPhotosUpsertRequest {
-
+public class AddressDto {
     @NotNull
-    private Set<UUID> personPhotoIds;
-
+    private String street;
+    @NotNull
+    private int number;
 }

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,14 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import dev.evgeni.personsapi.models.Photo;
+import dev.evgeni.personsapi.model.Photo;
 import dev.evgeni.personsapi.repository.PhotoRepository;
+import lombok.AllArgsConstructor;
 
 @RestController
 @RequestMapping("/photos")
+@AllArgsConstructor
 public class PhotoController {
 
-    @Autowired
     private PhotoRepository repo;
 
     @GetMapping("")

@@ -1,6 +1,5 @@
 package dev.evgeni.personsapi.web.dto;
 
-import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonPhotosGetResponse {
-
-    private Set<UUID> personPhotoIds;
-
+public class PersonResponse {
+    private UUID id;
+    private String name;
+    private int age;
+    private AddressDto address;
+    private String egnNumber;
+    private String gender;
 }
