@@ -23,8 +23,8 @@ import dev.evgeni.personsapi.repository.PersonRepository;
 import dev.evgeni.personsapi.repository.PhotoRepository;
 import dev.evgeni.personsapi.validation.ObjectValidator;
 import dev.evgeni.personsapi.web.dto.PersonCreateRequest;
-import dev.evgeni.personsapi.web.dto.PersonPhotosResponse;
-import dev.evgeni.personsapi.web.dto.SetPersonPhotosRequest;
+import dev.evgeni.personsapi.web.dto.PersonPhotosGetResponse;
+import dev.evgeni.personsapi.web.dto.PersonPhotosUpsertRequest;
 
 
 @RestController
@@ -74,7 +74,7 @@ public class PersonController {
     }
 
     @GetMapping("/{personId}/photos")
-    public PersonPhotosResponse getAllPersonPhotos(@PathVariable String personId) {
+    public PersonPhotosGetResponse getAllPersonPhotos(@PathVariable String personId) {
 
         Person person = repo.findById(UUID.fromString(personId)).get();
 
@@ -83,15 +83,15 @@ public class PersonController {
             allPersonPhotoIds.add(photo.getId());
         }
 
-        PersonPhotosResponse response =
-                PersonPhotosResponse.builder().personPhotoIds(allPersonPhotoIds).build();
+        PersonPhotosGetResponse response =
+                PersonPhotosGetResponse.builder().personPhotoIds(allPersonPhotoIds).build();
 
         return response;
     }
 
     @PutMapping(value = "/{personId}/photos")
-    public PersonPhotosResponse setPersonPhotos(@PathVariable String personId,
-            @RequestBody SetPersonPhotosRequest request) {
+    public PersonPhotosGetResponse setPersonPhotos(@PathVariable String personId,
+            @RequestBody PersonPhotosUpsertRequest request) {
         Person person = repo.findById(UUID.fromString(personId)).get();
 
         Map<String, String> validationErrors = validator.validate(request);
@@ -112,8 +112,8 @@ public class PersonController {
             allPersonPhotoIds.add(photo.getId());
         }
 
-        PersonPhotosResponse response =
-                PersonPhotosResponse.builder().personPhotoIds(allPersonPhotoIds).build();
+        PersonPhotosGetResponse response =
+                PersonPhotosGetResponse.builder().personPhotoIds(allPersonPhotoIds).build();
 
         return response;
     }
