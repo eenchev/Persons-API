@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import dev.evgeni.personsapi.error.InvalidObjectException;
+import dev.evgeni.personsapi.mapper.CommentMapper;
 import dev.evgeni.personsapi.mapper.PersonMapper;
+import dev.evgeni.personsapi.model.Comment;
 import dev.evgeni.personsapi.model.Person;
 import dev.evgeni.personsapi.service.PersonService;
 import dev.evgeni.personsapi.validation.ObjectValidator;
+import dev.evgeni.personsapi.web.dto.CommentDto;
 import dev.evgeni.personsapi.web.dto.PersonApiPage;
 import dev.evgeni.personsapi.web.dto.PersonCreateRequest;
 import dev.evgeni.personsapi.web.dto.PersonPhotosGetResponse;
@@ -38,6 +41,8 @@ public class PersonController {
     private final ObjectValidator validator;
 
     private final PersonMapper personMapper;
+
+    private final CommentMapper commentMapper;
 
     private final Integer PAGE_SIZE = 10;
 
@@ -118,6 +123,29 @@ public class PersonController {
                 PersonPhotosGetResponse.builder().personPhotoIds(allPersonPhotoIds).build();
 
         return response;
+    }
+
+    @GetMapping("/{personId}/comments")
+    public Set<CommentDto> getAllPersonComments(@PathVariable String personId) {
+
+        Set<Comment> allPersonComments = personService.findById(UUID.fromString(personId)).getComments();
+
+        return commentMapper.modelCollectionToDtoCollection(allPersonComments);
+    }
+
+    @PostMapping("/{personId}/comments")
+    public CommentDto addPersonComment(@PathVariable String personId, @RequestBody CommentDto commentDto) {
+
+        Map<String, String> validationErrors = validator.validate(commentDto);
+        if (validationErrors.size() != 0) {
+            throw new InvalidObjectException("Invalid Person Comment Add Request",
+                    validationErrors);
+        }
+
+        Comment commentBase = commentMapper.dtoToModel(commentDto);
+        Comment savedComment = personService.addCommentForPerson(UUID.fromString(personId), commentBase);
+
+        return commentMapper.modelToDto(savedComment);
     }
 
 }

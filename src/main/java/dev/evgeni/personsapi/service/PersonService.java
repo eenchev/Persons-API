@@ -9,8 +9,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import dev.evgeni.personsapi.error.NotFoundObjectException;
+import dev.evgeni.personsapi.model.Comment;
 import dev.evgeni.personsapi.model.Person;
 import dev.evgeni.personsapi.model.Photo;
+import dev.evgeni.personsapi.repository.CommentRepository;
 import dev.evgeni.personsapi.repository.PersonPagingRepository;
 import dev.evgeni.personsapi.repository.PersonRepository;
 import dev.evgeni.personsapi.repository.PhotoRepository;
@@ -23,6 +25,9 @@ public class PersonService {
 
     @Autowired
     private PhotoRepository photoRepo;
+
+    @Autowired
+    private CommentRepository commentRepo;
 
     @Autowired
     private PersonPagingRepository personPagingRepo;
@@ -43,6 +48,15 @@ public class PersonService {
 
     public Person save(Person person) {
         return personRepo.save(person);
+    }
+
+    public Comment addCommentForPerson(UUID personId, Comment comment) {
+
+        Person person = this.findById(personId);
+
+        comment.setAuthor(person);
+
+        return commentRepo.save(comment);
     }
 
     public Set<UUID> getPersonPhotoIds(UUID personId) {

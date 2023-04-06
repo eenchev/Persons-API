@@ -7,5 +7,6 @@ import dev.evgeni.personsapi.web.dto.AddressDto;
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
     AddressDto modelToDto(Address address);
+
     Address dtoToModel(AddressDto address);
 }
