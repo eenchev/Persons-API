@@ -27,7 +27,7 @@ public interface PersonRepository extends CrudRepository<Person, UUID> {
 
     List<Person> findByGenderOrderByNameDesc(Gender gender);
 
-    @Query("select p from Person p where u.egnNumber = ?1")
-    Person findByEgnNumber(String egnNumner);
+    @Query("select p from Person p where p.egnNumber = ?1")
+    Person findByEgnNumber(String egnNumber);
 
 }
