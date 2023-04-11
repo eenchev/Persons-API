@@ -27,7 +27,18 @@ public interface PersonRepository extends CrudRepository<Person, UUID> {
 
     List<Person> findByGenderOrderByNameDesc(Gender gender);
 
-    @Query("select p from Person p where p.egnNumber = ?1")
+    @Query("SELECT p FROM Person p WHERE p.egnNumber = ?1")
     Person findByEgnNumber(String egnNumber);
+
+    boolean existsByEgnNumber(String egnNumber);
+
+    @Query("""
+            SELECT CASE WHEN COUNT(p) > 0 THEN
+            TRUE ELSE FALSE END
+            FROM Person p
+            WHERE p.egnNumber = ?1
+            """
+    )
+    boolean existsByEgnNumberManualQuery(String egnNumber);
 
 }

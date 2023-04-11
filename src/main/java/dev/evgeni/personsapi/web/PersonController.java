@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.evgeni.personsapi.error.InvalidObjectException;
 import dev.evgeni.personsapi.mapper.CommentMapper;
 import dev.evgeni.personsapi.mapper.PersonMapper;
-import dev.evgeni.personsapi.model.Comment;
 import dev.evgeni.personsapi.model.Person;
 import dev.evgeni.personsapi.service.PersonService;
 import dev.evgeni.personsapi.validation.ObjectValidator;
-import dev.evgeni.personsapi.web.dto.CommentDto;
 import dev.evgeni.personsapi.web.dto.PersonApiPage;
 import dev.evgeni.personsapi.web.dto.PersonCreateRequest;
 import dev.evgeni.personsapi.web.dto.PersonPhotosGetResponse;
@@ -125,27 +123,27 @@ public class PersonController {
         return response;
     }
 
-    @GetMapping("/{personId}/comments")
-    public Set<CommentDto> getAllPersonComments(@PathVariable String personId) {
+    // @GetMapping("/{personId}/comments")
+    // public Set<CommentDto> getAllPersonComments(@PathVariable String personId) {
 
-        Set<Comment> allPersonComments = personService.findById(UUID.fromString(personId)).getComments();
+    //     Set<Comment> allPersonComments = personService.findById(UUID.fromString(personId)).getComments();
 
-        return commentMapper.modelCollectionToDtoCollection(allPersonComments);
-    }
+    //     return commentMapper.modelCollectionToDtoCollection(allPersonComments);
+    // }
 
-    @PostMapping("/{personId}/comments")
-    public CommentDto addPersonComment(@PathVariable String personId, @RequestBody CommentDto commentDto) {
+    // @PostMapping("/{personId}/comments")
+    // public CommentDto addPersonComment(@PathVariable String personId, @RequestBody CommentDto commentDto) {
 
-        Map<String, String> validationErrors = validator.validate(commentDto);
-        if (validationErrors.size() != 0) {
-            throw new InvalidObjectException("Invalid Person Comment Add Request",
-                    validationErrors);
-        }
+    //     Map<String, String> validationErrors = validator.validate(commentDto);
+    //     if (validationErrors.size() != 0) {
+    //         throw new InvalidObjectException("Invalid Person Comment Add Request",
+    //                 validationErrors);
+    //     }
 
-        Comment commentBase = commentMapper.dtoToModel(commentDto);
-        Comment savedComment = personService.addCommentForPerson(UUID.fromString(personId), commentBase);
+    //     Comment commentBase = commentMapper.dtoToModel(commentDto);
+    //     Comment savedComment = personService.addCommentForPerson(UUID.fromString(personId), commentBase);
 
-        return commentMapper.modelToDto(savedComment);
-    }
+    //     return commentMapper.modelToDto(savedComment);
+    // }
 
 }
