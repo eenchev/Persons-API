@@ -1,0 +1,1 @@
+INSERT INTO Person (id, age, name, address_id, egn_number, gender) VALUES ('fa338013-338a-4491-bac1-6cf62ec54fd1', 12, 'Ivan', null, '1111111111', 'MALE');

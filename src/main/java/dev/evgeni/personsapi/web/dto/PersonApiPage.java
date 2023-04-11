@@ -3,8 +3,10 @@ package dev.evgeni.personsapi.web.dto;
 import java.util.List;
 import org.springframework.data.domain.Page;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode
 public class PersonApiPage<T> {
   List<T> content;
   CustomPageable pageable;
