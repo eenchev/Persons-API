@@ -1,13 +1,10 @@
 package dev.evgeni.personsapi.web;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,14 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import dev.evgeni.personsapi.error.InvalidObjectException;
-import dev.evgeni.personsapi.error.NotFoundObjectException;
 import dev.evgeni.personsapi.mapper.PersonMapper;
 import dev.evgeni.personsapi.models.Person;
-import dev.evgeni.personsapi.models.Photo;
-import dev.evgeni.personsapi.repository.PersonPagingRepository;
-import dev.evgeni.personsapi.repository.PersonRepository;
-import dev.evgeni.personsapi.repository.PhotoRepository;
+import dev.evgeni.personsapi.service.PersonService;
 import dev.evgeni.personsapi.validation.ObjectValidator;
+import dev.evgeni.personsapi.web.dto.PersonApiPage;
 import dev.evgeni.personsapi.web.dto.PersonCreateRequest;
 import dev.evgeni.personsapi.web.dto.PersonPhotosGetResponse;
 import dev.evgeni.personsapi.web.dto.PersonPhotosUpsertRequest;
@@ -40,41 +34,34 @@ import dev.evgeni.personsapi.web.dto.PersonUpdateRequest;
 public class PersonController {
 
     @Autowired
-    private PersonRepository repo;
-
-    @Autowired
-    private PersonPagingRepository pagingRepo;
-
-    @Autowired
-    private PhotoRepository photoRepo;
-
-    @Autowired
     private ObjectValidator validator;
 
     @Autowired
     private PersonMapper personMapper;
 
+    @Autowired
+    private PersonService personService;
+
     private final Integer PAGE_SIZE = 10;
 
-    @GetMapping("")
-    public Page<PersonResponse> getAllPersons(
-            @RequestParam(required = false, defaultValue = "1") Integer currPage) {
-        return pagingRepo.findAll(PageRequest.of(currPage, PAGE_SIZE))
-                .map(personMapper::responseFromModel);
+    @GetMapping(name= "", produces = "application/json")
+    public PersonApiPage<PersonResponse> getAllPersons(
+            @RequestParam(required = false, defaultValue = "0") Integer currPage) {
+                Page<PersonResponse> personPage = 
+                personService.fetchAll(currPage, PAGE_SIZE).map(personMapper::responseFromModel);
+        return new PersonApiPage<>(personPage);
     }
 
     @GetMapping("/{personId}")
     public ResponseEntity<PersonResponse> getPersonById(@PathVariable String personId) {
-        Person person = repo.findById(UUID.fromString(personId)).orElseThrow(() -> {
-            throw new NotFoundObjectException("Person Not Found", Person.class.getName(), personId);
-        });
+        Person person = personService.findById(personId);
 
         return ResponseEntity.ok(personMapper.responseFromModel(person));
     }
 
     @DeleteMapping("/{personId}")
     public void deletePersonById(@PathVariable String personId) {
-        repo.deleteById(UUID.fromString(personId));
+        personService.deleteById(personId);
     }
 
     @PostMapping("")
@@ -87,7 +74,7 @@ public class PersonController {
 
         Person mappedPerson = personMapper.modelFromCreateRequest(personDto);
 
-        Person savedPerson = repo.save(mappedPerson);
+        Person savedPerson = personService.save(mappedPerson);
 
         PersonResponse responsePerson = personMapper.responseFromModel(savedPerson);
 
@@ -103,13 +90,11 @@ public class PersonController {
             throw new InvalidObjectException("Invalid Person Create", validationErrors);
         }
 
-        Person currentPerson = repo.findById(UUID.fromString(personId)).orElseThrow(() -> {
-            throw new NotFoundObjectException("Person Not Found", Person.class.getName(), personId);
-        });
+        Person currentPerson = personService.findById(personId);
 
         personMapper.updateModelFromDto(personDto, currentPerson);
 
-        Person updatedPerson = repo.save(currentPerson);
+        Person updatedPerson = personService.save(currentPerson);
 
         PersonResponse responsePerson = personMapper.responseFromModel(updatedPerson);
 
@@ -119,12 +104,7 @@ public class PersonController {
     @GetMapping("/{personId}/photos")
     public PersonPhotosGetResponse getAllPersonPhotos(@PathVariable String personId) {
 
-        Person person = repo.findById(UUID.fromString(personId)).get();
-
-        Set<UUID> allPersonPhotoIds = new HashSet<>();
-        for (Photo photo : person.getPhotos()) {
-            allPersonPhotoIds.add(photo.getId());
-        }
+        Set<UUID> allPersonPhotoIds = personService.getAllPersonPhotoIds(personId);
 
         PersonPhotosGetResponse response =
                 PersonPhotosGetResponse.builder().personPhotoIds(allPersonPhotoIds).build();
@@ -135,7 +115,6 @@ public class PersonController {
     @PutMapping(value = "/{personId}/photos")
     public PersonPhotosGetResponse setPersonPhotos(@PathVariable String personId,
             @RequestBody PersonPhotosUpsertRequest request) {
-        Person person = repo.findById(UUID.fromString(personId)).get();
 
         Map<String, String> validationErrors = validator.validate(request);
 
@@ -144,16 +123,7 @@ public class PersonController {
                     validationErrors);
         }
 
-        List<Photo> allPersonPhotos =
-                (List<Photo>) photoRepo.findAllById(request.getPersonPhotoIds());
-
-        person.setPhotos(new HashSet<>(allPersonPhotos));
-        Person savedPerson = repo.save(person);
-
-        Set<UUID> allPersonPhotoIds = new HashSet<>();
-        for (Photo photo : savedPerson.getPhotos()) {
-            allPersonPhotoIds.add(photo.getId());
-        }
+        Set<UUID> allPersonPhotoIds = personService.setPersonPhotos(personId, request.getPersonPhotoIds());
 
         PersonPhotosGetResponse response =
                 PersonPhotosGetResponse.builder().personPhotoIds(allPersonPhotoIds).build();

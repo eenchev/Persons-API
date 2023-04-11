@@ -10,8 +10,8 @@ public class PersonResponse {
 
     private UUID id;
     private String name;
-    private int age;
+    private Integer age;
     private AddressDto address;
     private String egnNumber;
-
+    private String gender;
 }
