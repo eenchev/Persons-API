@@ -3,6 +3,9 @@ package dev.evgeni.personsapi.integration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.util.HashMap;
+import org.hamcrest.CoreMatchers;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -11,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Tag("integration")
 public class PersonEndpointsTest {
 
     @Autowired
@@ -28,7 +32,10 @@ public class PersonEndpointsTest {
                     "egnNumber": "8888888888"
                 }
             """)
-        ).andExpect(status().isCreated());
+        ).andExpect(status().isCreated())
+        .andExpect(jsonPath("$.name").value("Ivan"))
+        .andExpect(jsonPath("$.age").value(14))
+        .andExpect(jsonPath("$.egnNumber").value("8888888888"));
     }
 
 
@@ -45,16 +52,12 @@ public class PersonEndpointsTest {
                 }
             """)
         ).andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.", null));
+        .andExpect(jsonPath("$.message").value("Invalid Person Create"))
+        .andExpect(jsonPath("$.errors").isMap())
+        .andExpect(jsonPath("$.errors", CoreMatchers.instanceOf(HashMap.class)))
+        .andExpect(jsonPath("$.clazz", CoreMatchers.nullValue()))
+        .andExpect(jsonPath("$.id", CoreMatchers.instanceOf(String.class)));
     }
 
-    // {
-    //     "id": "aa80b94c-6392-4b42-b624-7f76ca7507cf",
-    //     "message": "Invalid Person Create",
-    //     "errors": {
-    //         "egnNumber": "Persons EGN shçould have exactly 10 chars",
-    //         "age": "i like ages from 0 to 200"
-    //     },
-    //     "clazz": null
-    // }
+
 }

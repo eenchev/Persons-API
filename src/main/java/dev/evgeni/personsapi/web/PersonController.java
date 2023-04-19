@@ -3,7 +3,6 @@ package dev.evgeni.personsapi.web;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,19 +26,18 @@ import dev.evgeni.personsapi.web.dto.PersonPhotosGetResponse;
 import dev.evgeni.personsapi.web.dto.PersonPhotosUpsertRequest;
 import dev.evgeni.personsapi.web.dto.PersonResponse;
 import dev.evgeni.personsapi.web.dto.PersonUpdateRequest;
+import lombok.AllArgsConstructor;
 
 
 @RestController
 @RequestMapping("/persons")
+@AllArgsConstructor
 public class PersonController {
 
-    @Autowired
     private ObjectValidator validator;
 
-    @Autowired
     private PersonMapper personMapper;
 
-    @Autowired
     private PersonService personService;
 
     private final Integer PAGE_SIZE = 10;
