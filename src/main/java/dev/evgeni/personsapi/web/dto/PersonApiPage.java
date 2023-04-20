@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode
+// @JsonPropertyOrder({"pagination", "content"})
 public class PersonApiPage<T> {
 
     private List<T> content;
