@@ -12,8 +12,11 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -23,9 +26,13 @@ import dev.evgeni.personsapi.mapper.PersonMapper;
 import dev.evgeni.personsapi.models.Person;
 import dev.evgeni.personsapi.service.PersonService;
 import dev.evgeni.personsapi.validation.ObjectValidator;
+import dev.evgeni.personsapi.web.JwtFilter;
 import dev.evgeni.personsapi.web.PersonController;
 
-@WebMvcTest(PersonController.class)
+@WebMvcTest(controllers = PersonController.class,  
+    excludeAutoConfiguration = {SecurityAutoConfiguration.class},
+    excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = JwtFilter.class)
+)
 public class PersonsControllerTest {
 
     @MockBean

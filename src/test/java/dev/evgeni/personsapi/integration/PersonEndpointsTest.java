@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -21,6 +22,7 @@ public class PersonEndpointsTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser(username = "ivan", roles = {"ADMIN"})
     void shouldAddValidPerson() throws Exception {
         mockMvc.perform(
             post("/persons")
@@ -40,6 +42,7 @@ public class PersonEndpointsTest {
 
 
     @Test
+    @WithMockUser(username = "ivan", roles = {"ADMIN"})
     void shouldThrowValidationErrorForInvalidPerson() throws Exception {
         mockMvc.perform(
             post("/persons")
