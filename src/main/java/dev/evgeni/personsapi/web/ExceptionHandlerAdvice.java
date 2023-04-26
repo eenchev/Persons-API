@@ -33,7 +33,7 @@ public class ExceptionHandlerAdvice {
     }
 
     @Data
-    private static class GenericExeptionBody {
+    public static class GenericExeptionBody {
         private final UUID id;
         private final String message;
         private final Map<String, String> errors;

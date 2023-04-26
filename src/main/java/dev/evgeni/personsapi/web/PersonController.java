@@ -26,6 +26,11 @@ import dev.evgeni.personsapi.web.dto.PersonPhotosGetResponse;
 import dev.evgeni.personsapi.web.dto.PersonPhotosUpsertRequest;
 import dev.evgeni.personsapi.web.dto.PersonResponse;
 import dev.evgeni.personsapi.web.dto.PersonUpdateRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 
 
@@ -42,15 +47,17 @@ public class PersonController {
 
     private final Integer PAGE_SIZE = 10;
 
-    @GetMapping(name= "", produces = "application/json")
+    @GetMapping(name = "", produces = "application/json")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public PersonApiPage<PersonResponse> getAllPersons(
             @RequestParam(required = false, defaultValue = "0") Integer currPage) {
-                Page<PersonResponse> personPage = 
+        Page<PersonResponse> personPage =
                 personService.fetchAll(currPage, PAGE_SIZE).map(personMapper::responseFromModel);
         return new PersonApiPage<>(personPage);
     }
 
     @GetMapping("/{personId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<PersonResponse> getPersonById(@PathVariable String personId) {
         Person person = personService.findById(personId);
 
@@ -58,11 +65,17 @@ public class PersonController {
     }
 
     @DeleteMapping("/{personId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public void deletePersonById(@PathVariable String personId) {
         personService.deleteById(personId);
     }
 
-    @PostMapping("")
+    @PostMapping(name = "", produces = "application/json", consumes = "application/json")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")}, responses = {
+            @ApiResponse(responseCode = "200", description = "Person Created",
+                    content = @Content(schema = @Schema(implementation = PersonResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid Person Creation Data",
+                    content = @Content(schema = @Schema(implementation = ExceptionHandlerAdvice.GenericExeptionBody.class))),})
     public ResponseEntity<PersonResponse> createPerson(@RequestBody PersonCreateRequest personDto) {
 
         Map<String, String> validationErrors = validator.validate(personDto);
@@ -80,6 +93,7 @@ public class PersonController {
     }
 
     @PatchMapping("/{personId}")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public ResponseEntity<PersonResponse> updatePerson(@PathVariable String personId,
             @RequestBody PersonUpdateRequest personDto) {
 
@@ -100,6 +114,7 @@ public class PersonController {
     }
 
     @GetMapping("/{personId}/photos")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public PersonPhotosGetResponse getAllPersonPhotos(@PathVariable String personId) {
 
         Set<UUID> allPersonPhotoIds = personService.getAllPersonPhotoIds(personId);
@@ -111,6 +126,7 @@ public class PersonController {
     }
 
     @PutMapping(value = "/{personId}/photos")
+    @Operation(security = {@SecurityRequirement(name = "bearer-key")})
     public PersonPhotosGetResponse setPersonPhotos(@PathVariable String personId,
             @RequestBody PersonPhotosUpsertRequest request) {
 
@@ -121,7 +137,8 @@ public class PersonController {
                     validationErrors);
         }
 
-        Set<UUID> allPersonPhotoIds = personService.setPersonPhotos(personId, request.getPersonPhotoIds());
+        Set<UUID> allPersonPhotoIds =
+                personService.setPersonPhotos(personId, request.getPersonPhotoIds());
 
         PersonPhotosGetResponse response =
                 PersonPhotosGetResponse.builder().personPhotoIds(allPersonPhotoIds).build();
