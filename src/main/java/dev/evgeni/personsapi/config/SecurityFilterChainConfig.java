@@ -27,7 +27,8 @@ public class SecurityFilterChainConfig {
                     auth
                     .requestMatchers(HttpMethod.GET, "/photos").permitAll()
                     .requestMatchers(HttpMethod.GET, 
-                        "/swagger-ui", 
+                                    "/dummy",
+                                    "/swagger-ui", 
                                     "/swagger-ui/*", 
                                     "/v3/api-docs/swagger-config", 
                                     "/v3/api-docs").permitAll()
