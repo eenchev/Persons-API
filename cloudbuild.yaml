@@ -18,7 +18,7 @@
    - '--image'
    - 'gcr.io/progress-april2023/personapi:$COMMIT_SHA'
    - '--region'
-   - 'eu-west3'
+   - 'europe-west3'
  images:
  - 'gcr.io/progress-april2023/personapi:$COMMIT_SHA'
 options:
