@@ -18,3 +18,5 @@
    - 'eu-west3'
  images:
  - 'gcr.io/progress-april2023/personapi:$COMMIT_SHA'
+options:
+  logging: CLOUD_LOGGING_ONLY
